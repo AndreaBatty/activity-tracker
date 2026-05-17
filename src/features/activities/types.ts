@@ -1,0 +1,49 @@
+export type ActivityType = "boolean" | "quantity" | "duration";
+
+export type ActivityIcon = "pen" | "dumbbell" | "calendar" | "sparkles";
+
+export type Activity = {
+  id: string;
+  name: string;
+  description?: string;
+  icon: ActivityIcon;
+  type: ActivityType;
+  unit: string | null;
+  value: number;
+  target: number;
+  status: string;
+  archived: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ActivityLog = {
+  id: string;
+  activityId: string;
+  date: string;
+  value: number;
+  note?: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type NewActivityInput = {
+  name: string;
+  description?: string;
+  icon: ActivityIcon;
+  type: ActivityType;
+  unit?: string | null;
+  target: number;
+};
+
+export type UpdateActivityProgressInput = {
+  id: string;
+  value: number;
+};
+
+export type UpsertActivityLogInput = {
+  activityId: string;
+  date: string;
+  value: number;
+  note?: string;
+};
