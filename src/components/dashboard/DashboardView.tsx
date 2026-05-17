@@ -10,7 +10,9 @@ import { getTodayKey } from "@/features/activities/date";
 import {
   getActiveActivities,
   getActivitiesWithTodayProgress,
+  getCurrentStreak,
 } from "@/features/activities/selectors";
+import { ActivityCalendar } from "./ActivityCalendar";
 
 export function DashboardView() {
   const activities = useActivityStore((state) => state.activities);
@@ -30,6 +32,8 @@ export function DashboardView() {
   const completed = activeActivities.filter(
     (activity) => activity.value >= activity.target,
   ).length;
+
+  const currentStreak = getCurrentStreak(logs, today);
 
   return (
     <>
@@ -55,7 +59,11 @@ export function DashboardView() {
           value={`${completed}/${activeActivities.length}`}
           helper="attività di oggi"
         />
-        <MetricCard label="Streak" value="5" helper="giorni consecutivi" />
+        <MetricCard
+          label="Streak"
+          value={String(currentStreak)}
+          helper="giorni consecutivi"
+        />
       </section>
 
       <section className="space-y-3">
@@ -84,6 +92,8 @@ export function DashboardView() {
           <EmptyDashboardState />
         )}
       </section>
+
+      <ActivityCalendar activities={activities} logs={logs} />
 
       <RecentLogs activities={activities} logs={logs} />
     </>

@@ -1,3 +1,4 @@
+import { addDays } from "./date";
 import type { Activity, ActivityLog } from "./types";
 import { getActivityStatus } from "./utils";
 
@@ -72,4 +73,36 @@ export function getRecentLogs(logs: ActivityLog[], limit = 5) {
         b.updatedAt.localeCompare(a.updatedAt),
     )
     .slice(0, limit);
+}
+
+export function getDailyCompletedDates(logs: ActivityLog[]) {
+  return new Set(
+    logs
+      .filter((log) => log.value > 0)
+      .map((log) => log.date),
+  );
+}
+
+export function getCurrentStreak(logs: ActivityLog[], today: string) {
+  const completedDates = getDailyCompletedDates(logs);
+
+  let streak = 0;
+  let cursor = today;
+
+  while (completedDates.has(cursor)) {
+    streak += 1;
+    cursor = addDays(cursor, -1);
+  }
+
+  return streak;
+}
+
+export function getLogCountByDate(logs: ActivityLog[]) {
+  return logs.reduce<Record<string, number>>((acc, log) => {
+    if (log.value <= 0) return acc;
+
+    acc[log.date] = (acc[log.date] ?? 0) + 1;
+
+    return acc;
+  }, {});
 }

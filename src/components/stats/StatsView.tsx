@@ -12,6 +12,7 @@ import { getTodayKey } from "@/features/activities/date";
 import {
   getActiveActivities,
   getActivitiesWithTodayProgress,
+  getCurrentStreak,
 } from "@/features/activities/selectors";
 
 export function StatsView() {
@@ -27,6 +28,8 @@ export function StatsView() {
   const completedActivities = activeActivities.filter(isActivityComplete);
   const pendingActivities =
     activeActivities.length - completedActivities.length;
+
+  const currentStreak = getCurrentStreak(logs, today);
 
   const completionRate =
     activeActivities.length > 0
@@ -122,8 +125,8 @@ export function StatsView() {
         />
         <SmallStatRow
           icon={Sparkles}
-          label="Attività completate"
-          value={String(completedActivities.length)}
+          label="Streak corrente"
+          value={`${currentStreak} giorni`}
         />
         <SmallStatRow
           icon={Clock}
