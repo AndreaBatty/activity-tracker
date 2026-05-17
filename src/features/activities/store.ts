@@ -16,6 +16,7 @@ type UpdateActivityInput = {
   name: string;
   description?: string;
   icon: Activity["icon"];
+  color: Activity["color"];
   type: Activity["type"];
   unit?: string | null;
   target: number;
@@ -49,6 +50,7 @@ function createActivity(input: NewActivityInput): Activity {
     name: input.name,
     description: input.description || "",
     icon: input.icon,
+    color: input.color,
     type: input.type,
     unit: input.type === "boolean" ? null : input.unit || null,
     value: 0,
@@ -213,6 +215,7 @@ export const useActivityStore = create<ActivityStore>()(
               name: input.name,
               description: input.description || "",
               icon: input.icon,
+              color: input.color,
               type: input.type,
               unit: input.type === "boolean" ? null : input.unit || null,
               target: input.type === "boolean" ? 1 : input.target,

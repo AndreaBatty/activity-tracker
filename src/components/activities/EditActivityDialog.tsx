@@ -1,7 +1,11 @@
 "use client";
 
 import React from "react";
-import type { Activity, ActivityIcon } from "@/features/activities/types";
+import type {
+  Activity,
+  ActivityColor,
+  ActivityIcon,
+} from "@/features/activities/types";
 import { useActivityStore } from "@/features/activities/store";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,6 +26,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { IconPicker } from "./IconPicker";
+import { ColorPicker } from "./ColorPicker";
 
 type EditActivityDialogProps = {
   activity: Activity;
@@ -38,6 +43,7 @@ export function EditActivityDialog({
 
   const [name, setName] = React.useState(activity.name);
   const [icon, setIcon] = React.useState<ActivityIcon>(activity.icon);
+  const [color, setColor] = React.useState<ActivityColor>(activity.color);
   const [description, setDescription] = React.useState(
     activity.description || "",
   );
@@ -49,6 +55,7 @@ export function EditActivityDialog({
     setName(activity.name);
     setDescription(activity.description || "");
     setIcon(activity.icon);
+    setColor(activity.color);
     setType(activity.type);
     setTarget(String(activity.target));
     setUnit(activity.unit || "");
@@ -69,6 +76,7 @@ export function EditActivityDialog({
       description: description.trim(),
       type,
       icon,
+      color,
       target: type === "boolean" ? 1 : numericTarget,
       unit: type === "boolean" ? null : unit.trim() || null,
     });
@@ -115,6 +123,11 @@ export function EditActivityDialog({
           <div className="space-y-2">
             <Label>Icona</Label>
             <IconPicker value={icon} onChange={setIcon} />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Colore</Label>
+            <ColorPicker value={color} onChange={setColor} />
           </div>
 
           <div className="space-y-2">

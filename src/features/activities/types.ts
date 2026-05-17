@@ -7,6 +7,7 @@ export type Activity = {
   name: string;
   description?: string;
   icon: ActivityIcon;
+  color: ActivityColor;
   type: ActivityType;
   unit: string | null;
   value: number;
@@ -31,6 +32,7 @@ export type NewActivityInput = {
   name: string;
   description?: string;
   icon: ActivityIcon;
+  color: ActivityColor;
   type: ActivityType;
   unit?: string | null;
   target: number;
@@ -47,3 +49,5 @@ export type UpsertActivityLogInput = {
   value: number;
   note?: string;
 };
+
+export type ActivityColor = "olive" | "amber" | "rose" | "sky" | "violet";

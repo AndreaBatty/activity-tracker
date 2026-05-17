@@ -12,6 +12,7 @@ import { ActivityTypeBadge } from "./ActivityTypeBadge";
 import { EditActivityDialog } from "./EditActivityDialog";
 import { DeleteActivityDialog } from "./DeleteActivityDialog";
 import Link from "next/link";
+import { activityColorClasses } from "@/features/activities/colors";
 
 type ActivityListItemProps = {
   activity: Activity;
@@ -21,6 +22,7 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
   const [editOpen, setEditOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const colorClasses = activityColorClasses[activity.color ?? "olive"];
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   const Icon = activityIcons[activity.icon];
@@ -30,7 +32,7 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
       <Card className="relative overflow-visible rounded-3xl border-border bg-card shadow-sm">
         <CardContent className="p-3 sm:p-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-secondary text-primary sm:h-11 sm:w-11">
+            <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl sm:h-11 sm:w-11 ${colorClasses.icon}`}>
               <Icon className="h-5 w-5" />
             </div>
 

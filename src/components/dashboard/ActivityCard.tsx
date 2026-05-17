@@ -12,6 +12,7 @@ import {
   getActivityProgress,
   isActivityComplete,
 } from "@/features/activities/utils";
+import { activityColorClasses } from "@/features/activities/colors";
 
 type ActivityCardProps = {
   activity: Activity;
@@ -22,6 +23,7 @@ export function ActivityCard({ activity, index }: ActivityCardProps) {
   const [open, setOpen] = useState(false);
 
   const Icon = activityIcons[activity.icon];
+  const colorClasses = activityColorClasses[activity.color ?? "olive"];
 
   const progress = getActivityProgress(activity);
   const isComplete = isActivityComplete(activity);
@@ -40,7 +42,7 @@ export function ActivityCard({ activity, index }: ActivityCardProps) {
           <CardContent className="p-3 sm:p-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div className="flex min-w-0 items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-secondary text-primary sm:h-11 sm:w-11">
+                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl sm:h-11 sm:w-11 ${colorClasses.icon}`}>
                   <Icon className="h-5 w-5" />
                 </div>
 
@@ -57,7 +59,7 @@ export function ActivityCard({ activity, index }: ActivityCardProps) {
               <span
                 className={`w-fit shrink-0 rounded-full px-3 py-1 text-xs font-medium ${
                   isComplete
-                    ? "bg-primary text-primary-foreground"
+                    ? colorClasses.badge
                     : "bg-secondary text-muted-foreground"
                 }`}
               >
@@ -66,10 +68,7 @@ export function ActivityCard({ activity, index }: ActivityCardProps) {
             </div>
 
             <div className="mt-4 h-2 overflow-hidden rounded-full bg-secondary">
-              <div
-                className="h-full rounded-full bg-primary"
-                style={{ width: `${progress}%` }}
-              />
+              <div className={`h-full rounded-full ${colorClasses.progress}`} style={{ width: `${progress}%` }} />
             </div>
           </CardContent>
         </Card>

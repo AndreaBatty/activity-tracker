@@ -27,12 +27,14 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useActivityStore } from "@/features/activities/store";
 import { IconPicker } from "./IconPicker";
-import { ActivityIcon } from "@/features/activities/types";
+import { ActivityIcon, ActivityColor } from "@/features/activities/types";
+import { ColorPicker } from "@/components/activities/ColorPicker";
 
 const newActivitySchema = z.object({
   name: z.string().min(2, "Il nome deve avere almeno 2 caratteri."),
   description: z.string().optional(),
   icon: z.enum(["pen", "dumbbell", "calendar", "sparkles"]),
+  color: z.enum(["olive", "amber", "rose", "sky", "violet"]),
   type: z.enum(["boolean", "quantity", "duration"], {
     message: "Seleziona un tipo di attività.",
   }),
@@ -51,6 +53,7 @@ const defaultValues: NewActivityFormInput = {
   name: "",
   description: "",
   icon: "sparkles",
+  color: "olive",
   type: "quantity",
   unit: "",
   target: 1,
@@ -75,12 +78,14 @@ export function NewActivityDialog() {
 
   const type = watch("type");
   const icon = watch("icon");
+  const color = watch("color");
 
   function onSubmit(values: NewActivityFormOutput) {
     addActivity({
       name: values.name,
       description: values.description,
       icon: values.icon,
+      color: values.color,
       type: values.type,
       unit: values.type === "boolean" ? null : values.unit || null,
       target: values.type === "boolean" ? 1 : values.target,
@@ -137,6 +142,19 @@ export function NewActivityDialog() {
               value={icon as ActivityIcon}
               onChange={(value) =>
                 setValue("icon", value, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                })
+              }
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Colore</Label>
+            <ColorPicker
+              value={color as ActivityColor}
+              onChange={(value) =>
+                setValue("color", value, {
                   shouldValidate: true,
                   shouldDirty: true,
                 })

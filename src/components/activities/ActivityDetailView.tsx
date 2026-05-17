@@ -20,6 +20,7 @@ import {
   withTodayProgress,
 } from "@/features/activities/selectors";
 import { ActivityLogItem } from "./ActivityLogItem";
+import { activityColorClasses } from "@/features/activities/colors";
 
 type ActivityDetailViewProps = {
   activityId: string;
@@ -60,6 +61,7 @@ export function ActivityDetailView({ activityId }: ActivityDetailViewProps) {
   }
 
   const Icon = activityIcons[activity.icon];
+  const colorClasses = activityColorClasses[activity.color ?? "olive"];
   const progress = Math.round(getActivityProgress(activity));
   const complete = isActivityComplete(activity);
 
@@ -77,7 +79,7 @@ export function ActivityDetailView({ activityId }: ActivityDetailViewProps) {
 
       <section className="rounded-[2rem] border border-border bg-card p-5 shadow-sm">
         <div className="flex items-start gap-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-secondary text-primary">
+          <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${colorClasses.icon}`}>
             <Icon className="h-6 w-6" />
           </div>
 
@@ -96,7 +98,7 @@ export function ActivityDetailView({ activityId }: ActivityDetailViewProps) {
         </div>
       </section>
 
-      <section className="rounded-[2rem] border border-border bg-primary p-5 text-primary-foreground shadow-lg">
+      <section className={`rounded-[2rem] border border-border p-5 shadow-lg ${colorClasses.detail}`}>
         <div className="mb-3 flex items-center gap-2 text-sm opacity-80">
           <Target className="h-4 w-4 shrink-0" />
           Progresso di oggi
