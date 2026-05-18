@@ -11,6 +11,7 @@ import {
   getActiveActivities,
   getActivitiesWithTodayProgress,
   getCurrentStreak,
+  getScheduledActivitiesForDate,
 } from "@/features/activities/selectors";
 import { ActivityCalendar } from "./ActivityCalendar";
 
@@ -29,9 +30,11 @@ export function DashboardView() {
 
   const activeActivities = getActiveActivities(activitiesWithTodayProgress);
 
-  const completed = activeActivities.filter(
-    (activity) => activity.value >= activity.target,
-  ).length;
+const todayActivities = getScheduledActivitiesForDate(activeActivities, today);
+
+  const completed = todayActivities.filter(
+  (activity) => activity.value >= activity.target,
+).length;
 
   const currentStreak = getCurrentStreak(logs, today);
 
@@ -56,7 +59,7 @@ export function DashboardView() {
       <section className="grid grid-cols-2 gap-3">
         <MetricCard
           label="Completate"
-          value={`${completed}/${activeActivities.length}`}
+          value={`${completed}/${todayActivities.length}`}
           helper="attività di oggi"
         />
         <MetricCard
@@ -78,9 +81,9 @@ export function DashboardView() {
           <NewActivityDialog />
         </div>
 
-        {activeActivities.length > 0 ? (
+        {todayActivities.length > 0 ? (
           <div className="space-y-3">
-            {activeActivities.map((activity, index) => (
+            {todayActivities.map((activity, index) => (
               <ActivityCard
                 key={activity.id}
                 activity={activity}

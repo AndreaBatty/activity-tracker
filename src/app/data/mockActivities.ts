@@ -15,6 +15,8 @@ export const activities: Activity[] = [
     archived: false,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    scheduleType: "daily",
+    daysOfWeek: [0, 1, 2, 3, 4, 5, 6],
   },
   {
     id: "2",
@@ -30,6 +32,8 @@ export const activities: Activity[] = [
     archived: false,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    scheduleType: "custom",
+    daysOfWeek: [1, 3, 5],
   },
   {
     id: "3",
@@ -45,6 +49,8 @@ export const activities: Activity[] = [
     archived: false,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    scheduleType: "daily",
+    daysOfWeek: [0, 1, 2, 3, 4, 5, 6],
   },
   {
     id: "4",
@@ -60,5 +66,7 @@ export const activities: Activity[] = [
     archived: false,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    scheduleType: "daily",
+    daysOfWeek: [0, 1, 2, 3, 4, 5, 6],
   },
 ];

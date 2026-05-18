@@ -106,3 +106,26 @@ export function getLogCountByDate(logs: ActivityLog[]) {
     return acc;
   }, {});
 }
+
+export function isActivityScheduledForDate(
+  activity: Activity,
+  dateKey: string,
+) {
+  if (activity.scheduleType === "anytime") return false;
+
+  if (activity.scheduleType === "daily") return true;
+
+  const date = new Date(dateKey);
+  const weekday = date.getDay();
+
+  return activity.daysOfWeek.includes(weekday);
+}
+
+export function getScheduledActivitiesForDate(
+  activities: Activity[],
+  dateKey: string,
+) {
+  return activities.filter((activity) =>
+    isActivityScheduledForDate(activity, dateKey),
+  );
+}

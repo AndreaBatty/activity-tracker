@@ -18,6 +18,8 @@ type UpdateActivityInput = {
   icon: Activity["icon"];
   color: Activity["color"];
   type: Activity["type"];
+  scheduleType: Activity["scheduleType"];
+  daysOfWeek: number[];
   unit?: string | null;
   target: number;
 };
@@ -59,6 +61,8 @@ function createActivity(input: NewActivityInput): Activity {
     archived: false,
     createdAt: now,
     updatedAt: now,
+    scheduleType: input.scheduleType,
+    daysOfWeek: input.daysOfWeek,
   };
 }
 
@@ -220,6 +224,8 @@ export const useActivityStore = create<ActivityStore>()(
               unit: input.type === "boolean" ? null : input.unit || null,
               target: input.type === "boolean" ? 1 : input.target,
               updatedAt: new Date().toISOString(),
+              scheduleType: input.scheduleType,
+              daysOfWeek: input.daysOfWeek,
             };
 
             return {

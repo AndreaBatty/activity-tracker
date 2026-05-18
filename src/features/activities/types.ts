@@ -16,6 +16,8 @@ export type Activity = {
   archived: boolean;
   createdAt: string;
   updatedAt: string;
+  scheduleType: ActivityScheduleType;
+  daysOfWeek: number[];
 };
 
 export type ActivityLog = {
@@ -34,6 +36,8 @@ export type NewActivityInput = {
   icon: ActivityIcon;
   color: ActivityColor;
   type: ActivityType;
+  scheduleType: ActivityScheduleType;
+  daysOfWeek: number[];
   unit?: string | null;
   target: number;
 };
@@ -51,3 +55,5 @@ export type UpsertActivityLogInput = {
 };
 
 export type ActivityColor = "olive" | "amber" | "rose" | "sky" | "violet";
+
+export type ActivityScheduleType = "daily" | "custom" | "anytime";
