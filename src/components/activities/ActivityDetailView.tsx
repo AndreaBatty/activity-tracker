@@ -175,7 +175,7 @@ function ActivityLogList({ logs, activity }: ActivityLogListProps) {
     <section className="space-y-3">
       <div>
         <p className="text-sm text-muted-foreground">Storico</p>
-        <h2 className="text-xl font-semibold tracking-tight">Log recenti</h2>
+        <h2 className="text-xl font-semibold tracking-tight">Progressi recenti</h2>
       </div>
 
       <div className="space-y-3">

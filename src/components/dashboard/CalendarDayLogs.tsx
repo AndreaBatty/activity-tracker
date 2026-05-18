@@ -24,7 +24,7 @@ export function CalendarDayLogs({
         <p className="mt-3 text-sm font-medium">Seleziona un giorno</p>
 
         <p className="mt-1 text-sm leading-6 text-muted-foreground">
-          Tocca una data del calendario per vedere i log registrati.
+          Tocca una data del calendario per vedere i progressi registrati.
         </p>
       </div>
     );

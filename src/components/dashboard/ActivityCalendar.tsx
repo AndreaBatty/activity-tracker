@@ -139,17 +139,21 @@ export function ActivityCalendar({ activities, logs }: ActivityCalendarProps) {
               count={count}
               isToday={day.isToday && isCurrentMonth}
               isSelected={selectedDate === day.date}
-              onClick={() => setSelectedDate(day.date)}
+              onClick={() =>
+                setSelectedDate((current) =>
+                  current === day.date ? null : day.date,
+                )
+              }
             />
           );
         })}
       </div>
 
       <div className="mt-5 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-        <LegendItem className="bg-secondary" label="Nessun log" />
-        <LegendItem className="bg-primary/40" label="1 log" />
-        <LegendItem className="bg-primary/70" label="2 log" />
-        <LegendItem className="bg-primary" label="3+ log" />
+        <LegendItem className="bg-secondary" label="Nessuna progresso" />
+        <LegendItem className="bg-primary/40" label="1 progresso" />
+        <LegendItem className="bg-primary/70" label="2 progressi" />
+        <LegendItem className="bg-primary" label="3+ progressi" />
       </div>
 
       <div className="mt-5">

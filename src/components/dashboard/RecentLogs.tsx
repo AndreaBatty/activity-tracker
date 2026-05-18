@@ -33,7 +33,7 @@ export function RecentLogs({ activities, logs }: RecentLogsProps) {
     <section className="space-y-3">
       <div>
         <p className="text-sm text-muted-foreground">Storico</p>
-        <h2 className="text-xl font-semibold tracking-tight">Ultimi log</h2>
+        <h2 className="text-xl font-semibold tracking-tight">Ultimi progressi</h2>
       </div>
 
       <div className="space-y-3">
@@ -61,7 +61,7 @@ export function RecentLogs({ activities, logs }: RecentLogsProps) {
                 </div>
 
                 <span className="shrink-0 rounded-full bg-secondary px-3 py-1 text-xs font-medium text-muted-foreground">
-                  Log
+                  Progressi
                 </span>
               </div>
 
