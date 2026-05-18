@@ -129,3 +129,75 @@ export function getScheduledActivitiesForDate(
     isActivityScheduledForDate(activity, dateKey),
   );
 }
+
+export function getWeekDateKeys(referenceDate = new Date()) {
+  const date = new Date(referenceDate);
+  const day = date.getDay();
+
+  // JS: domenica = 0. Per settimana lun-dom:
+  const diffToMonday = day === 0 ? -6 : 1 - day;
+
+  const monday = new Date(date);
+  monday.setDate(date.getDate() + diffToMonday);
+
+  return Array.from({ length: 7 }).map((_, index) => {
+    const current = new Date(monday);
+    current.setDate(monday.getDate() + index);
+
+    const year = current.getFullYear();
+    const month = String(current.getMonth() + 1).padStart(2, "0");
+    const dayOfMonth = String(current.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${dayOfMonth}`;
+  });
+}
+
+export function getLogsForDateRange(
+  logs: ActivityLog[],
+  dateKeys: string[],
+) {
+  const dateSet = new Set(dateKeys);
+
+  return logs.filter((log) => dateSet.has(log.date));
+}
+
+export function isLogTargetReached(log: ActivityLog, activities: Activity[]) {
+  const activity = activities.find((item) => item.id === log.activityId);
+
+  if (!activity) return false;
+
+  return log.value >= activity.target;
+}
+
+export function getTargetReachedLogs(
+  logs: ActivityLog[],
+  activities: Activity[],
+) {
+  return logs.filter((log) => isLogTargetReached(log, activities));
+}
+
+export function getAnytimeActivities(activities: Activity[]) {
+  return activities.filter((activity) => activity.scheduleType === "anytime");
+}
+
+export function getActivityStats(
+  activity: Activity,
+  logs: ActivityLog[],
+) {
+  const activityLogs = getLogsForActivity(logs, activity.id);
+
+  const completedLogs = activityLogs.filter(
+    (log) => log.value >= activity.target,
+  );
+
+  const totalValue = activityLogs.reduce((total, log) => {
+    return total + log.value;
+  }, 0);
+
+  return {
+    logs: activityLogs,
+    totalLogs: activityLogs.length,
+    completedLogs: completedLogs.length,
+    totalValue,
+  };
+}
