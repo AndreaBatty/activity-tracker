@@ -16,6 +16,7 @@ type UpdateActivityInput = {
   name: string;
   description?: string;
   icon: Activity["icon"];
+  tag: Activity["tag"];
   color: Activity["color"];
   type: Activity["type"];
   scheduleType: Activity["scheduleType"];
@@ -52,6 +53,7 @@ function createActivity(input: NewActivityInput): Activity {
     name: input.name,
     description: input.description || "",
     icon: input.icon,
+    tag: input.tag,
     color: input.color,
     type: input.type,
     unit: input.type === "boolean" ? null : input.unit || null,
@@ -219,6 +221,7 @@ export const useActivityStore = create<ActivityStore>()(
               name: input.name,
               description: input.description || "",
               icon: input.icon,
+              tag: input.tag,
               color: input.color,
               type: input.type,
               unit: input.type === "boolean" ? null : input.unit || null,

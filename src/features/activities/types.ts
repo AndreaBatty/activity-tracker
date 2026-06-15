@@ -18,6 +18,7 @@ export type Activity = {
   updatedAt: string;
   scheduleType: ActivityScheduleType;
   daysOfWeek: number[];
+  tag: ActivityTag;
 };
 
 export type ActivityLog = {
@@ -40,6 +41,7 @@ export type NewActivityInput = {
   daysOfWeek: number[];
   unit?: string | null;
   target: number;
+  tag: ActivityTag;
 };
 
 export type UpdateActivityProgressInput = {
@@ -57,3 +59,11 @@ export type UpsertActivityLogInput = {
 export type ActivityColor = "olive" | "amber" | "rose" | "sky" | "violet";
 
 export type ActivityScheduleType = "daily" | "custom" | "anytime";
+
+export type ActivityTag =
+  | "study"
+  | "fitness"
+  | "creativity"
+  | "wellness"
+  | "leisure"
+  | "other";

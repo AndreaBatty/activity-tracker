@@ -17,10 +17,12 @@ import { ActivityLogChart } from "./ActivityLogChart";
 import { getTodayKey } from "@/features/activities/date";
 import {
   getLogsForActivity,
+  isActivityRegisteredForDate,
   withTodayProgress,
 } from "@/features/activities/selectors";
 import { ActivityLogItem } from "./ActivityLogItem";
 import { activityColorClasses } from "@/features/activities/colors";
+import { ActivityTagBadge } from "./ActivityTagBadge";
 
 type ActivityDetailViewProps = {
   activityId: string;
@@ -62,8 +64,8 @@ export function ActivityDetailView({ activityId }: ActivityDetailViewProps) {
 
   const Icon = activityIcons[activity.icon];
   const colorClasses = activityColorClasses[activity.color ?? "olive"];
-  const progress = Math.round(getActivityProgress(activity));
-  const complete = isActivityComplete(activity);
+  const complete = isActivityRegisteredForDate(activity, logs, today);
+  const progress = complete ? 100 : 0;
 
   const activityLogs = getLogsForActivity(logs, activity.id);
 
@@ -79,7 +81,9 @@ export function ActivityDetailView({ activityId }: ActivityDetailViewProps) {
 
       <section className="rounded-[2rem] border border-border bg-card p-5 shadow-sm">
         <div className="flex items-start gap-4">
-          <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${colorClasses.icon}`}>
+          <div
+            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${colorClasses.icon}`}
+          >
             <Icon className="h-6 w-6" />
           </div>
 
@@ -94,21 +98,28 @@ export function ActivityDetailView({ activityId }: ActivityDetailViewProps) {
                 {activity.description}
               </p>
             ) : null}
+            <div className="mt-3">
+              <ActivityTagBadge tag={activity.tag ?? "other"} />
+            </div>
           </div>
         </div>
       </section>
 
-      <section className={`rounded-[2rem] border border-border p-5 shadow-lg ${colorClasses.detail}`}>
+      <section
+        className={`rounded-[2rem] border border-border p-5 shadow-lg ${colorClasses.detail}`}
+      >
         <div className="mb-3 flex items-center gap-2 text-sm opacity-80">
           <Target className="h-4 w-4 shrink-0" />
-          Progresso di oggi
+          Oggi
         </div>
 
         <div className="flex items-end justify-between gap-4">
           <div>
             <p className="text-4xl font-semibold tracking-tight">{progress}%</p>
             <p className="mt-2 text-sm opacity-80">
-              Target: {formatActivityTarget(activity)}
+              {complete
+                ? "Hai già registrato questa attività oggi."
+                : "Nessuna registrazione per oggi."}
             </p>
           </div>
 
@@ -130,7 +141,7 @@ export function ActivityDetailView({ activityId }: ActivityDetailViewProps) {
           className="mt-5 w-full rounded-full"
           onClick={() => setLogOpen(true)}
         >
-          Registra progresso
+          Aggiungi registrazione
         </Button>
       </section>
 
@@ -175,7 +186,9 @@ function ActivityLogList({ logs, activity }: ActivityLogListProps) {
     <section className="space-y-3">
       <div>
         <p className="text-sm text-muted-foreground">Storico</p>
-        <h2 className="text-xl font-semibold tracking-tight">Progressi recenti</h2>
+        <h2 className="text-xl font-semibold tracking-tight">
+          Progressi recenti
+        </h2>
       </div>
 
       <div className="space-y-3">

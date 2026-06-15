@@ -31,15 +31,25 @@ import {
   ActivityIcon,
   ActivityColor,
   ActivityScheduleType,
+  ActivityTag,
 } from "@/features/activities/types";
 import { ColorPicker } from "@/components/activities/ColorPicker";
 import { SchedulePicker } from "@/components/activities/SchedulePicker";
+import { TagPicker } from "./TagPicker";
 
 const newActivitySchema = z
   .object({
     name: z.string().min(2, "Il nome deve avere almeno 2 caratteri."),
     description: z.string().optional(),
     icon: z.enum(["pen", "dumbbell", "calendar", "sparkles"]),
+    tag: z.enum([
+      "study",
+      "fitness",
+      "creativity",
+      "wellness",
+      "leisure",
+      "other",
+    ]),
     color: z.enum(["olive", "amber", "rose", "sky", "violet"]),
     type: z.enum(["boolean", "quantity", "duration"], {
       message: "Seleziona un tipo di attività.",
@@ -69,6 +79,7 @@ const defaultValues: NewActivityFormInput = {
   name: "",
   description: "",
   icon: "sparkles",
+  tag: "other",
   color: "olive",
   scheduleType: "daily",
   daysOfWeek: [0, 1, 2, 3, 4, 5, 6],
@@ -99,12 +110,14 @@ export function NewActivityDialog() {
   const color = watch("color");
   const scheduleType = watch("scheduleType");
   const daysOfWeek = watch("daysOfWeek");
+  const tag = watch("tag");
 
   function onSubmit(values: NewActivityFormOutput) {
     addActivity({
       name: values.name,
       description: values.description,
       icon: values.icon,
+      tag: values.tag,
       color: values.color,
       scheduleType: values.scheduleType,
       daysOfWeek: values.daysOfWeek,
@@ -170,6 +183,19 @@ export function NewActivityDialog() {
                 value={icon as ActivityIcon}
                 onChange={(value) =>
                   setValue("icon", value, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  })
+                }
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Tag</Label>
+              <TagPicker
+                value={tag as ActivityTag}
+                onChange={(value) =>
+                  setValue("tag", value, {
                     shouldValidate: true,
                     shouldDirty: true,
                   })

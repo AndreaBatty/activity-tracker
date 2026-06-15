@@ -6,13 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import type { Activity } from "@/features/activities/types";
 import { activityIcons } from "@/features/activities/icons";
-import { formatActivityTarget } from "@/features/activities/utils";
-import { useActivityStore } from "@/features/activities/store";
-import { ActivityTypeBadge } from "./ActivityTypeBadge";
 import { EditActivityDialog } from "./EditActivityDialog";
 import { DeleteActivityDialog } from "./DeleteActivityDialog";
 import Link from "next/link";
 import { activityColorClasses } from "@/features/activities/colors";
+import { ActivityTagBadge } from "./ActivityTagBadge";
 
 type ActivityListItemProps = {
   activity: Activity;
@@ -32,7 +30,9 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
       <Card className="relative overflow-visible rounded-3xl border-border bg-card shadow-sm">
         <CardContent className="p-3 sm:p-4">
           <div className="flex items-center gap-3">
-            <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl sm:h-11 sm:w-11 ${colorClasses.icon}`}>
+            <div
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl sm:h-11 sm:w-11 ${colorClasses.icon}`}
+            >
               <Icon className="h-5 w-5" />
             </div>
 
@@ -44,7 +44,7 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
                 <h3 className="min-w-0 max-w-full truncate font-medium text-foreground">
                   {activity.name}
                 </h3>
-                <ActivityTypeBadge type={activity.type} />
+                <ActivityTagBadge tag={activity.tag ?? "other"} />
               </div>
 
               <p className="mt-1 line-clamp-2 text-sm leading-5 text-muted-foreground">
@@ -52,7 +52,7 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
               </p>
 
               <p className="mt-2 text-xs text-muted-foreground">
-                Target: {formatActivityTarget(activity)}
+                {formatScheduleLabel(activity)}
               </p>
             </Link>
 
@@ -119,4 +119,11 @@ export function ActivityListItem({ activity }: ActivityListItemProps) {
       />
     </>
   );
+}
+
+function formatScheduleLabel(activity: Activity) {
+  if (activity.scheduleType === "daily") return "Ogni giorno";
+  if (activity.scheduleType === "anytime") return "Quando vuoi";
+
+  return "Giorni specifici";
 }

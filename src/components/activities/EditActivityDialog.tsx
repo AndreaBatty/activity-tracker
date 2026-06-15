@@ -6,6 +6,7 @@ import type {
   ActivityColor,
   ActivityIcon,
   ActivityScheduleType,
+  ActivityTag,
 } from "@/features/activities/types";
 import { SchedulePicker } from "@/components/activities/SchedulePicker";
 import { useActivityStore } from "@/features/activities/store";
@@ -29,6 +30,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { IconPicker } from "./IconPicker";
 import { ColorPicker } from "./ColorPicker";
+import { TagPicker } from "./TagPicker";
 
 type EditActivityDialogProps = {
   activity: Activity;
@@ -45,6 +47,7 @@ export function EditActivityDialog({
 
   const [name, setName] = React.useState(activity.name);
   const [icon, setIcon] = React.useState<ActivityIcon>(activity.icon);
+  const [tag, setTag] = React.useState<ActivityTag>(activity.tag ?? "other");
   const [color, setColor] = React.useState<ActivityColor>(activity.color);
   const [description, setDescription] = React.useState(
     activity.description || "",
@@ -64,6 +67,7 @@ export function EditActivityDialog({
     setName(activity.name);
     setDescription(activity.description || "");
     setIcon(activity.icon);
+    setTag(activity.tag ?? "other");
     setColor(activity.color);
     setType(activity.type);
     setTarget(String(activity.target));
@@ -87,6 +91,7 @@ export function EditActivityDialog({
       description: description.trim(),
       type,
       icon,
+      tag,
       color,
       scheduleType,
       daysOfWeek,
@@ -137,6 +142,11 @@ export function EditActivityDialog({
             <div className="space-y-2">
               <Label>Icona</Label>
               <IconPicker value={icon} onChange={setIcon} />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Tag</Label>
+              <TagPicker value={tag} onChange={setTag} />
             </div>
 
             <div className="space-y-2">

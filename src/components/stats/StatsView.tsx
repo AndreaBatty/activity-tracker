@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  BarChart3,
-  CalendarCheck,
-  Flame,
-  ListChecks,
-  Target,
-} from "lucide-react";
+import { BarChart3, ListChecks } from "lucide-react";
 import { MetricCard } from "@/components/dashboard/MetricCard";
 import { ActivityProgressChart } from "@/components/stats/ActivityProgressChart";
 import { useActivityStore } from "@/features/activities/store";
@@ -19,14 +13,9 @@ import {
   getCurrentStreak,
   getLogsForDateRange,
   getScheduledActivitiesForDate,
-  getTargetReachedLogs,
   getWeekDateKeys,
+  isActivityRegisteredForDate,
 } from "@/features/activities/selectors";
-import {
-  formatActivityValue,
-  getActivityProgress,
-  isActivityComplete,
-} from "@/features/activities/utils";
 import type { Activity } from "@/features/activities/types";
 
 export function StatsView() {
@@ -47,8 +36,9 @@ export function StatsView() {
     today,
   );
 
-  const completedTodayActivities =
-    scheduledTodayActivities.filter(isActivityComplete);
+  const completedTodayActivities = scheduledTodayActivities.filter((activity) =>
+    isActivityRegisteredForDate(activity, logs, today),
+  );
 
   const pendingTodayActivities =
     scheduledTodayActivities.length - completedTodayActivities.length;
@@ -65,14 +55,10 @@ export function StatsView() {
   const weekLogs = getLogsForDateRange(logs, weekDateKeys);
   const weekPositiveLogs = weekLogs.filter((log) => log.value > 0);
 
-  const activeDaysThisWeek = new Set(
-    weekPositiveLogs.map((log) => log.date),
-  ).size;
+  const activeDaysThisWeek = new Set(weekPositiveLogs.map((log) => log.date))
+    .size;
 
-  const targetReachedThisWeek = getTargetReachedLogs(
-    weekPositiveLogs,
-    activities,
-  ).length;
+  const registeredThisWeek = weekPositiveLogs.length;
 
   const currentStreak = getCurrentStreak(logs, today);
 
@@ -121,7 +107,7 @@ export function StatsView() {
           <MetricCard
             label="Completamento"
             value={`${todayCompletionRate}%`}
-            helper="target raggiunti"
+            helper="attività registrate"
           />
         </section>
       </StatsSection>
@@ -145,9 +131,9 @@ export function StatsView() {
           />
 
           <MetricCard
-            label="Target"
-            value={String(targetReachedThisWeek)}
-            helper="raggiunti"
+            label="Registrate"
+            value={String(registeredThisWeek)}
+            helper="attività segnate"
           />
 
           <MetricCard
@@ -166,7 +152,15 @@ export function StatsView() {
         {scheduledTodayActivities.length > 0 ? (
           <div className="space-y-3">
             {scheduledTodayActivities.map((activity) => (
-              <ActivityProgressRow key={activity.id} activity={activity} />
+              <ActivityProgressRow
+                key={activity.id}
+                activity={activity}
+                isRegistered={isActivityRegisteredForDate(
+                  activity,
+                  logs,
+                  today,
+                )}
+              />
             ))}
           </div>
         ) : (
@@ -182,7 +176,15 @@ export function StatsView() {
         {anytimeActivities.length > 0 ? (
           <div className="space-y-3">
             {anytimeActivities.map((activity) => (
-              <ActivityProgressRow key={activity.id} activity={activity} />
+              <ActivityProgressRow
+                key={activity.id}
+                activity={activity}
+                isRegistered={isActivityRegisteredForDate(
+                  activity,
+                  logs,
+                  today,
+                )}
+              />
             ))}
           </div>
         ) : (
@@ -249,11 +251,14 @@ function StatsSection({
 
 type ActivityProgressRowProps = {
   activity: Activity;
+  isRegistered: boolean;
 };
 
-function ActivityProgressRow({ activity }: ActivityProgressRowProps) {
-  const progress = Math.round(getActivityProgress(activity));
-  const complete = isActivityComplete(activity);
+function ActivityProgressRow({
+  activity,
+  isRegistered,
+}: ActivityProgressRowProps) {
+  const progress = isRegistered ? 100 : 0;
 
   return (
     <article className="rounded-3xl border border-border bg-card p-4 shadow-sm">
@@ -261,18 +266,18 @@ function ActivityProgressRow({ activity }: ActivityProgressRowProps) {
         <div className="min-w-0">
           <h3 className="truncate font-medium">{activity.name}</h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            {formatActivityValue(activity)}
+            {activity.description || "Nessuna descrizione"}
           </p>
         </div>
 
         <span
           className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium ${
-            complete
+            isRegistered
               ? "bg-primary text-primary-foreground"
               : "bg-secondary text-muted-foreground"
           }`}
         >
-          {complete ? "Completata" : "Da fare"}
+          {isRegistered ? "Registrata" : "Da registrare"}
         </span>
       </div>
 
@@ -305,8 +310,7 @@ function ActivityHistoryRow({
         <div className="min-w-0">
           <h3 className="truncate font-medium">{activity.name}</h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            {totalLogs} {totalLogs === 1 ? "registrazione" : "registrazioni"} ·{" "}
-            {completedLogs} target raggiunti
+            {totalLogs} {totalLogs === 1 ? "registrazione" : "registrazioni"}
           </p>
         </div>
 
@@ -319,8 +323,8 @@ function ActivityHistoryRow({
         </span>
       </div>
 
-      <p className="mt-3 text-sm font-medium">
-        Totale: {formatHistoricalTotal(totalValue, activity)}
+      <p className="mt-3 text-sm text-muted-foreground">
+        Totale registrato: {formatHistoricalTotal(totalValue, activity)}
       </p>
     </article>
   );

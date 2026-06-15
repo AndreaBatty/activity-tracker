@@ -1,32 +1,32 @@
 "use client";
 
 import { useState } from "react";
-import { CalendarDays, Dumbbell, PenLine, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import type { Activity } from "@/features/activities/types";
 import { LogActivityDialog } from "@/components/activities/LogActivityDialog";
 import { activityIcons } from "@/features/activities/icons";
 import {
-  formatActivityValue,
   getActivityProgress,
   isActivityComplete,
 } from "@/features/activities/utils";
 import { activityColorClasses } from "@/features/activities/colors";
+import { ActivityTagBadge } from "../activities/ActivityTagBadge";
 
 type ActivityCardProps = {
   activity: Activity;
   index: number;
+  isRegisteredToday: boolean;
 };
 
-export function ActivityCard({ activity, index }: ActivityCardProps) {
+export function ActivityCard({ activity, index, isRegisteredToday }: ActivityCardProps) {
   const [open, setOpen] = useState(false);
 
   const Icon = activityIcons[activity.icon];
   const colorClasses = activityColorClasses[activity.color ?? "olive"];
 
-  const progress = getActivityProgress(activity);
-  const isComplete = isActivityComplete(activity);
+  const progress = isRegisteredToday ? 100 : 0;
+  const isComplete = isRegisteredToday;
 
   return (
     <>
@@ -42,7 +42,9 @@ export function ActivityCard({ activity, index }: ActivityCardProps) {
           <CardContent className="p-3 sm:p-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div className="flex min-w-0 items-center gap-3">
-                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl sm:h-11 sm:w-11 ${colorClasses.icon}`}>
+                <div
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl sm:h-11 sm:w-11 ${colorClasses.icon}`}
+                >
                   <Icon className="h-5 w-5" />
                 </div>
 
@@ -50,9 +52,9 @@ export function ActivityCard({ activity, index }: ActivityCardProps) {
                   <h3 className="truncate font-medium text-foreground">
                     {activity.name}
                   </h3>
-                  <p className="truncate text-sm text-muted-foreground">
-                    {formatActivityValue(activity)}
-                  </p>
+                  <div className="mt-1 flex flex-wrap items-center gap-2">
+                    <ActivityTagBadge tag={activity.tag ?? "other"} />
+                  </div>
                 </div>
               </div>
 
@@ -63,12 +65,15 @@ export function ActivityCard({ activity, index }: ActivityCardProps) {
                     : "bg-secondary text-muted-foreground"
                 }`}
               >
-                {activity.status}
+                {isComplete ? "Registrata oggi" : "Da registrare"}
               </span>
             </div>
 
             <div className="mt-4 h-2 overflow-hidden rounded-full bg-secondary">
-              <div className={`h-full rounded-full ${colorClasses.progress}`} style={{ width: `${progress}%` }} />
+              <div
+                className={`h-full rounded-full ${colorClasses.progress}`}
+                style={{ width: `${progress}%` }}
+              />
             </div>
           </CardContent>
         </Card>

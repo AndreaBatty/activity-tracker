@@ -201,3 +201,41 @@ export function getActivityStats(
     totalValue,
   };
 }
+
+export function getLogForActivityDate(
+  logs: ActivityLog[],
+  activityId: string,
+  dateKey: string,
+) {
+  return logs.find(
+    (log) => log.activityId === activityId && log.date === dateKey,
+  );
+}
+
+export function hasPositiveLogForActivityDate(
+  logs: ActivityLog[],
+  activityId: string,
+  dateKey: string,
+) {
+  const log = getLogForActivityDate(logs, activityId, dateKey);
+
+  return Boolean(log && log.value > 0);
+}
+
+export function isActivityRegisteredForDate(
+  activity: Activity,
+  logs: ActivityLog[],
+  dateKey: string,
+) {
+  return hasPositiveLogForActivityDate(logs, activity.id, dateKey);
+}
+
+export function getRegisteredActivitiesForDate(
+  activities: Activity[],
+  logs: ActivityLog[],
+  dateKey: string,
+) {
+  return activities.filter((activity) =>
+    isActivityRegisteredForDate(activity, logs, dateKey),
+  );
+}

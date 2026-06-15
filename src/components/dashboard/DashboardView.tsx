@@ -12,6 +12,7 @@ import {
   getActivitiesWithTodayProgress,
   getCurrentStreak,
   getScheduledActivitiesForDate,
+  isActivityRegisteredForDate,
 } from "@/features/activities/selectors";
 import { ActivityCalendar } from "./ActivityCalendar";
 
@@ -30,11 +31,14 @@ export function DashboardView() {
 
   const activeActivities = getActiveActivities(activitiesWithTodayProgress);
 
-const todayActivities = getScheduledActivitiesForDate(activeActivities, today);
+  const todayActivities = getScheduledActivitiesForDate(
+    activeActivities,
+    today,
+  );
 
-  const completed = todayActivities.filter(
-  (activity) => activity.value >= activity.target,
-).length;
+  const completed = todayActivities.filter((activity) =>
+    isActivityRegisteredForDate(activity, logs, today),
+  ).length;
 
   const currentStreak = getCurrentStreak(logs, today);
 
@@ -88,6 +92,11 @@ const todayActivities = getScheduledActivitiesForDate(activeActivities, today);
                 key={activity.id}
                 activity={activity}
                 index={index}
+                isRegisteredToday={isActivityRegisteredForDate(
+                  activity,
+                  logs,
+                  today,
+                )}
               />
             ))}
           </div>
